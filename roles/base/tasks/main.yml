@@ -13,19 +13,91 @@
     mode: 0644
   notify: restart_sshd
 
-- name: install ifconfig y tree y curl y wget y git y blabla
-  tags: ifconfig
-  package:
-    name:
-      - '{{ ifconfig }}'
-      - '{{ tree }}'
-      - '{{ curl }}'
-      - '{{ wget }}'
-      - '{{ git }}'
-      - '{{ htop }}'
-      - '{{ neofetch }}'
-    state: latest
-# A implementar
-# Copiar carpeta volums docker
+# - name: install ifconfig y tree y curl y wget y git y blabla
+#   tags: ifconfig
+#   package:
+#     name:
+#       - '{{ ifconfig }}'
+#       - '{{ tree }}'
+#       - '{{ curl }}'
+#       - '{{ wget }}'
+#       - '{{ git }}'
+#       - '{{ htop }}'
+#       - '{{ neofetch }}'
+#     state: latest
+
+#Canviar owner de carpeta /var/run/docker.sock
+#sudo chown joan /var/run/docker.sock
+
+- name: Permetre que user joan executi docker-compose
+  file:
+    path: /var/run/docker.sock
+    owner: joan
+    group: root
+
+- name: Copiar ansible_sh_test
+  tags: docker
+  copy:
+    src: /home/joan/Documents/Github/Docker/ansible_sh_test
+    dest: /home/joan/Documents/ansible_sh_test
+    owner: joan
+    group: root
+    mode: 0755
+
+- name: Copiar SH_crontab.sh
+  copy:
+    src: /home/joan/Documents/Github/Docker/ansible_sh_crontab.sh
+    dest: /home/joan/Documents/ansible_sh_crontab.sh
+    owner: joan
+    group: root
+    mode: 0755
+
+- name: Copiar carpeta wallabot7
+  copy:
+    src: /home/joan/Documents/Github/Scraping/wallabot7
+    dest: /home/joan/Documents
+    owner: joan
+    group: root
+    mode: 0755
+# - name: Copiar carpetas mongo
+#   copy:
+#     src: /home/joan/Documents/docker/mongo/data/db
+#     dest: /home/joan/Documents/docker/mongo/data
+#     owner: joan
+#     group: root
+#     mode: 0755
+# - name: Copiar carpetas nodered 1
+#   tags: docker
+#   copy:
+#     src: /home/joan/Documents/docker/nodered
+#     dest: /home/joan/Documents/docker
+#     owner: joan
+#     group: root
+#     mode: 0755
+
+# - name: Copiar carpetas nodered 2
+#   tags: docker
+#   copy:
+#     src: /usr/bin/vcgencmd
+#     dest: /usr/bin/vcgencmd
+#     owner: joan
+#     group: root
+#     mode: 0755
+
+# - name: Copiar carpetas nodered 3
+#   tags: docker
+#   copy:
+#     src: /etc/localtime
+#     dest: /etc/localtime
+#     owner: joan
+#     group: root
+#     mode: 0755
+
+# - name: personalitzar bash
+#   tags: terminal
+
 # personalitzar bash  https://www.youtube.com/watch?v=Lf7NGZd30uw
-# la merda aquella del optional en internet (nomes si es ubuntu-server)
+# el optional en internet que fa que al arrencar el SO tardi moltissim si no ho tens modificat (nomes si es ubuntu-server)
+# copiar/crear els fitxers SH_crontab.sh per a que docker executi en reboots. I programar un crontab
+# instalar portainer
+# executar dockers de webmin, fail2ban, nginx etc etc
