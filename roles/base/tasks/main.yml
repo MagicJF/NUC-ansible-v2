@@ -5,7 +5,7 @@
 #     user: simone
 #     key: 'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPPEbLeKfPESw885oyo8hrXtwAFAA/E9nI1vl3IV83q3 ansible'
 
-- name: generate sshd_config file from template
+- name: generate sshd_config file from template.
   tags: ssh
   template:
     src: '{{ ssh_template_file }}'
