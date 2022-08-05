@@ -29,13 +29,7 @@
       tags: always
       authorized_key:
         user: simone
-        key: 'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINrDxZPkqsmmXMDzfBP1Rz3csJUcTPpF2iPvLIA/x/f/ ansible'
-
-    - name: add ssh key for joan
-      tags: always
-      authorized_key:
-        user: joan
-        key: 'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINrDxZPkqsmmXMDzfBP1Rz3csJUcTPpF2iPvLIA/x/f/ ansible'
+        key: 'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPPEbLeKfPESw885oyo8hrXtwAFAA/E9nI1vl3IV83q3 ansible'
 
     - name: add sudoers file for simone y joan
       tags: always

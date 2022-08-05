@@ -1,7 +1,9 @@
-- name: add ssh key for simone
-  authorized_key:
-    user: simone
-    key: 'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINrDxZPkqsmmXMDzfBP1Rz3csJUcTPpF2iPvLIA/x/f/ ansible'
+#aixo es per si vols fer keys management, per exemple borrar la clau fent un state=absent
+
+# - name: add ssh key for simone
+#   authorized_key:
+#     user: simone
+#     key: 'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPPEbLeKfPESw885oyo8hrXtwAFAA/E9nI1vl3IV83q3 ansible'
 
 - name: generate sshd_config file from template
   tags: ssh
@@ -34,31 +36,22 @@
     path: /var/run/docker.sock
     owner: joan
     group: root
+# - name: Copiar SH_crontab.sh
+#   copy:
+#     src: /home/joan/Documents/Github/Docker/ansible_sh_crontab.sh
+#     dest: /home/joan/Documents/ansible_sh_crontab.sh
+#     owner: joan
+#     group: root
+#     mode: 0755
 
-- name: Copiar ansible_sh_test
-  tags: docker
-  copy:
-    src: /home/joan/Documents/Github/Docker/ansible_sh_test
-    dest: /home/joan/Documents/ansible_sh_test
-    owner: joan
-    group: root
-    mode: 0755
+# - name: Copiar carpeta wallabot7
+#   copy:
+#     src: /home/joan/Documents/Github/Scraping/wallabot7
+#     dest: /home/joan/Documents
+#     owner: joan
+#     group: root
+#     mode: 0755
 
-- name: Copiar SH_crontab.sh
-  copy:
-    src: /home/joan/Documents/Github/Docker/ansible_sh_crontab.sh
-    dest: /home/joan/Documents/ansible_sh_crontab.sh
-    owner: joan
-    group: root
-    mode: 0755
-
-- name: Copiar carpeta wallabot7
-  copy:
-    src: /home/joan/Documents/Github/Scraping/wallabot7
-    dest: /home/joan/Documents
-    owner: joan
-    group: root
-    mode: 0755
 # - name: Copiar carpetas mongo
 #   copy:
 #     src: /home/joan/Documents/docker/mongo/data/db
@@ -66,6 +59,7 @@
 #     owner: joan
 #     group: root
 #     mode: 0755
+
 # - name: Copiar carpetas nodered 1
 #   tags: docker
 #   copy:
@@ -75,28 +69,11 @@
 #     group: root
 #     mode: 0755
 
-# - name: Copiar carpetas nodered 2
-#   tags: docker
-#   copy:
-#     src: /usr/bin/vcgencmd
-#     dest: /usr/bin/vcgencmd
-#     owner: joan
-#     group: root
-#     mode: 0755
-
-# - name: Copiar carpetas nodered 3
-#   tags: docker
-#   copy:
-#     src: /etc/localtime
-#     dest: /etc/localtime
-#     owner: joan
-#     group: root
-#     mode: 0755
-
 # - name: personalitzar bash
 #   tags: terminal
 
 # personalitzar bash  https://www.youtube.com/watch?v=Lf7NGZd30uw
+#PS1='\[\e[0;93m\]\u\[\e[0;93m\]@\[\e[0;93m\]\h\[\e[0;93m\]: \[\e[0;32m\]\w \[\e[0;5m\]>\[\e[0m\]'
 # el optional en internet que fa que al arrencar el SO tardi moltissim si no ho tens modificat (nomes si es ubuntu-server)
 # copiar/crear els fitxers SH_crontab.sh per a que docker executi en reboots. I programar un crontab
 # instalar portainer
