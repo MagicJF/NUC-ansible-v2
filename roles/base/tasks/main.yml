@@ -5,17 +5,17 @@
 #     user: simone
 #     key: 'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPPEbLeKfPESw885oyo8hrXtwAFAA/E9nI1vl3IV83q3 ansible'
 
-- name: generate sshd_config file from template.
-  tags: ssh
-  template:
-    src: '{{ ssh_template_file }}'
-    dest: /etc/ssh/sshd_config
-    owner: root
-    group: root
-    mode: 0644
-  notify: restart_sshd
+# - name: generate sshd_config file from template.
+#   tags: ssh
+#   template:
+#     src: '{{ ssh_template_file }}'
+#     dest: /etc/ssh/sshd_config
+#     owner: root
+#     group: root
+#     mode: 0644
+#   notify: restart_sshd
 
-# - name: install ifconfig y tree y curl y wget y git y blabla
+# - name: install [ifconfig , tree , curl , wget , git , htop ]
 #   tags: ifconfig
 #   package:
 #     name:
@@ -25,17 +25,14 @@
 #       - '{{ wget }}'
 #       - '{{ git }}'
 #       - '{{ htop }}'
-#       - '{{ neofetch }}'
 #     state: latest
 
-#Canviar owner de carpeta /var/run/docker.sock
-#sudo chown joan /var/run/docker.sock
+# - name: Permetre que user joan executi docker-compose
+#   file:
+#     path: /var/run/docker.sock
+#     owner: joan
+#     group: root
 
-- name: Permetre que user joan executi docker-compose
-  file:
-    path: /var/run/docker.sock
-    owner: joan
-    group: root
 # - name: Copiar SH_crontab.sh
 #   copy:
 #     src: /home/joan/Documents/Github/Docker/ansible_sh_crontab.sh
@@ -44,30 +41,32 @@
 #     group: root
 #     mode: 0755
 
-# - name: Copiar carpeta wallabot7
+# previament per a que et deixi copiar capreta docker, has de fer “sudo chown joan -R .” dins de la carpeta docker
+- name: Copiar carpeta docker, si falla ves fent reintnts.
+  copy:
+    src: /home/joan/docker
+    dest: /home/joan
+    owner: joan
+    group: root
+    mode: 0755
+#
+#
+#
+#
+#
+# - name: Copiar compose_portainer
 #   copy:
-#     src: /home/joan/Documents/Github/Scraping/wallabot7
-#     dest: /home/joan/Documents
+#     src: /home/joan/docker/compose
+#     dest: /home/joan/docker
 #     owner: joan
 #     group: root
 #     mode: 0755
-
-# - name: Copiar carpetas mongo
-#   copy:
-#     src: /home/joan/Documents/docker/mongo/data/db
-#     dest: /home/joan/Documents/docker/mongo/data
-#     owner: joan
-#     group: root
-#     mode: 0755
-
-# - name: Copiar carpetas nodered 1
-#   tags: docker
-#   copy:
-#     src: /home/joan/Documents/docker/nodered
-#     dest: /home/joan/Documents/docker
-#     owner: joan
-#     group: root
-#     mode: 0755
+#
+#
+#
+#
+#
+#
 
 # - name: personalitzar bash
 #   tags: terminal
@@ -76,5 +75,3 @@
 #PS1='\[\e[0;93m\]\u\[\e[0;93m\]@\[\e[0;93m\]\h\[\e[0;93m\]: \[\e[0;32m\]\w \[\e[0;5m\]>\[\e[0m\]'
 # el optional en internet que fa que al arrencar el SO tardi moltissim si no ho tens modificat (nomes si es ubuntu-server)
 # copiar/crear els fitxers SH_crontab.sh per a que docker executi en reboots. I programar un crontab
-# instalar portainer
-# executar dockers de webmin, fail2ban, nginx etc etc
