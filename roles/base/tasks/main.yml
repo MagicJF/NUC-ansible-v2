@@ -1,9 +1,9 @@
 #aixo es per si vols fer keys management, per exemple borrar la clau fent un state=absent
 
-# - name: add ssh key for simone
-#   authorized_key:
-#     user: simone
-#     key: 'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPPEbLeKfPESw885oyo8hrXtwAFAA/E9nI1vl3IV83q3 ansible'
+# # - name: add ssh key for simone
+# #   authorized_key:
+# #     user: simone
+# #     key: 'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPPEbLeKfPESw885oyo8hrXtwAFAA/E9nI1vl3IV83q3 ansible'
 
 # - name: generate sshd_config file from template.
 #   tags: ssh
@@ -14,12 +14,9 @@
 #     group: root
 #     mode: 0644
 #   notify: restart_sshd
-
-# - name: install [ifconfig , tree , curl , wget , git , htop ]
-#   tags: ifconfig
+# - name: install [ tree , curl , wget , git , htop ]
 #   package:
 #     name:
-#       - '{{ ifconfig }}'
 #       - '{{ tree }}'
 #       - '{{ curl }}'
 #       - '{{ wget }}'
@@ -32,7 +29,6 @@
 #     path: /var/run/docker.sock
 #     owner: joan
 #     group: root
-
 # - name: Copiar SH_crontab.sh
 #   copy:
 #     src: /home/joan/Documents/Github/Docker/ansible_sh_crontab.sh
@@ -42,27 +38,63 @@
 #     mode: 0755
 
 # previament per a que et deixi copiar capreta docker, has de fer “sudo chown joan -R .” dins de la carpeta docker
-- name: Copiar carpeta docker, si falla ves fent reintnts.
+#ho he separat perque copiar la carpeta docker de cop peta.
+- name: Copiar carpeta docker/compose
   copy:
-    src: /home/joan/docker
-    dest: /home/joan
+    src: /home/joan/docker/compose
+    dest: /home/joan/docker
     owner: joan
     group: root
     mode: 0755
-#
-#
-#
-#
-#
-# - name: Copiar compose_portainer
+# - name: Copiar carpeta docker/dhcp
 #   copy:
-#     src: /home/joan/docker/compose
+#     src: /home/joan/docker/dhcp
 #     dest: /home/joan/docker
 #     owner: joan
 #     group: root
 #     mode: 0755
-#
-#
+# - name: Copiar carpeta docker/webmin-dns
+#   copy:
+#     src: /home/joan/docker/webmin-dns
+#     dest: /home/joan/docker
+#     owner: joan
+#     mode: 0755
+
+# - name: Copiar carpeta docker/grafana
+#   copy:
+#     src: /home/joan/docker/grafana
+#     dest: /home/joan/docker
+#     owner: joan
+#     group: root
+#     mode: 0755
+# - name: Copiar carpeta docker/influxdb
+#   copy:
+#     src: /home/joan/docker/influxdb
+#     dest: /home/joan/docker
+#     owner: joan
+#     group: root
+#     mode: 0755
+# - name: Copiar carpeta docker/mongo
+#   copy:
+#     src: /home/joan/docker/mongo
+#     dest: /home/joan/docker
+#     owner: joan
+#     group: root
+#     mode: 0755
+# - name: Copiar carpeta docker/nginx
+#   copy:
+#     src: /home/joan/docker/nginx
+#     dest: /home/joan/docker
+#     owner: joan
+#     group: root
+#     mode: 0755
+# - name: Copiar carpeta docker/nodered
+#   copy:
+#     src: /home/joan/docker/nodered
+#     dest: /home/joan/docker
+#     owner: joan
+#     group: root
+#     mode: 0755
 #
 #
 #
@@ -73,5 +105,59 @@
 
 # personalitzar bash  https://www.youtube.com/watch?v=Lf7NGZd30uw
 #PS1='\[\e[0;93m\]\u\[\e[0;93m\]@\[\e[0;93m\]\h\[\e[0;93m\]: \[\e[0;32m\]\w \[\e[0;5m\]>\[\e[0m\]'
-# el optional en internet que fa que al arrencar el SO tardi moltissim si no ho tens modificat (nomes si es ubuntu-server)
 # copiar/crear els fitxers SH_crontab.sh per a que docker executi en reboots. I programar un crontab
+#
+#
+#
+#afegir el user "docker" a sudos per a que no tinguis que ficar "sudo docker-compose up" tot el rato
+#per a aixo cal:
+#https://docs.docker.com/engine/install/linux-postinstall/
+#Enganxari aixo i fer reboot
+# sudo groupadd docker
+# sudo usermod -aG docker $USER
+# newgrp docker
+
+# - name: 1/3 afegir el user "docker" a sudos per a que no tinguis que ficar "sudo docker-compose up" tot el rato
+#   ansible.builtin.shell:
+#     cmd: sudo groupadd docker
+# - name: 2/3 afegir el user "docker" a sudos per a que no tinguis que ficar "sudo docker-compose up" tot el rato
+#   ansible.builtin.shell:
+#     cmd: sudo usermod -aG docker $USER
+# - name: 3/3 afegir el user "docker" a sudos per a que no tinguis que ficar "sudo docker-compose up" tot el rato
+#   ansible.builtin.shell:
+#     cmd: newgrp docker
+
+- name: Copiar script a executar en reboots per a crontab
+  copy:
+    src: /home/joan/docker/compose/crontab/SH_crontab.sh
+    dest: /home/joan/docker/compose/crontab
+    owner: joan
+    group: root
+    mode: 0755
+- cron:
+    name: '1/2 CronJob wallapop for reboot'
+    user: 'joan'
+    special_time: reboot
+    job: echo $(date -u) 'REBOOT' >> /home/joan/docker/compose/crontab/Log_SH_crontab.txt
+- cron:
+    name: '2/2 CronJob wallapop for reboot'
+    user: 'joan'
+    special_time: reboot
+    job: /bin/sh /home/joan/docker/compose/crontab/SH_crontab.sh
+
+- cron:
+    name: '1/2 CronJob wallapop for time 8am 10am 12am 2pm 4pm 6pm 8pm'
+    user: 'joan'
+    minute: 0
+    hour: 8,10,12,14,16
+    job: echo $(date -u) 'Scheduled 8am 10am 12am 2pm 4pm 6pm 8pm' >> /home/joan/docker/compose/crontab/Log_SH_crontab.txt
+- cron:
+    name: '2/2 CronJob wallapop for time 8am 10am 12am 2pm 4pm 6pm 8pm'
+    user: 'joan'
+    minute: 0
+    hour: 8,10,12,14,16
+    job: /bin/sh /home/joan/docker/compose/crontab/SH_crontab.sh
+
+- name: set timezone to Europe/Madrid
+  timezone:
+    name: Europe/Madrid
